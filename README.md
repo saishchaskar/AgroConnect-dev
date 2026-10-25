@@ -6,7 +6,7 @@ AgroConnect is a farmer-focused crop support application for disease identificat
 
 ## Where the project stands
 
-The active delivery target is the Angular PWA with a Java Spring Boot application API. Flutter is the previous Android/web app and remains project history, not a parallel client target. The SIH 2024 AI decisions remain applicable: TensorFlow/EfficientNet crop classification, FAISS-backed agronomy retrieval, a fine-tuned LLM, regional LSTM weather advice, and IndicTrans2 localization.
+The active delivery target is the Angular PWA with a Java Spring Boot application API. Flutter is the previous Android/web app and remains project history, not a parallel client target. The selected AI approach uses TensorFlow/EfficientNet crop classification, FAISS-backed agronomy retrieval, a fine-tuned LLM, regional LSTM weather advice, and IndicTrans2 localization.
 
 | Area | Current state |
 | --- | --- |
@@ -24,7 +24,7 @@ The PWA starter baseline is Angular 17, TypeScript 5.3, Java 21, and Spring Boot
 
 ## Agreed technical approach
 
-The supplied SIH 2024 slides divide the work into model development (Phase 1) and app implementation/integration (Phase 2). This flow records that decision and makes the integration boundary explicit:
+Development is organized into two phases: Phase 1 covers model development and fine-tuning; Phase 2 covers application implementation, integration, and deployment. This flow makes the integration boundary explicit:
 
 ```mermaid
 flowchart LR
@@ -47,7 +47,7 @@ flowchart LR
 	APP --> FB[Farmer feedback and saved result]
 ```
 
-Spring Boot remains the single public API and coordinates the PWA workflow. The internal adapter can call the existing Python model runtime without exposing a second farmer-facing API. The original PDF pages are not checked into this repository, so this editable diagram captures the supplied approach rather than embedding a screenshot of the slides.
+Spring Boot remains the single public API and coordinates the PWA workflow. The internal adapter can call the existing Python model runtime without exposing a second farmer-facing API.
 
 ### Data and evaluation context
 
@@ -64,7 +64,7 @@ The previous README's “450+ diseases and pests” figure is a project-note cla
 ### Model and service improvements
 
 - Keep EfficientNet as the agreed image-model baseline. Compare newer/mobile-efficient candidates only on the same leakage-resistant field-photo split; promote a replacement only when per-crop recall, calibration, latency, and device/cloud cost improve.
-- The slides call the fine-tuned model “GPT-based”; older notes mention Gemma 2B. Resolve this naming conflict against the actual checkpoint, tokenizer, license, quantization, and benchmark artifact. Keep a provider/model adapter so the product does not depend on an unverified label.
+- Project notes describe the fine-tuned model as GPT-based, while older notes mention Gemma 2B. Resolve the checkpoint name, tokenizer, license, quantization, and benchmark against the model artifact. Keep a provider/model adapter so the product does not depend on an unverified label.
 - Benchmark the selected LSTM against persistence and an available trusted forecast feed. Display its location, horizon, issue time, and uncertainty. Keep weather advisories separate from diagnosis confidence.
 - Evaluate vision with per-class precision/recall, macro-F1, confusion matrix, calibration, and low-confidence abstention. Evaluate RAG with retrieval recall/ranking, citation support, and expert review. Evaluate weather using chronological MAE/RMSE and decision-specific error costs.
 - For each launch language, test typed input, translated output, agricultural terminology, fallback behavior, and mixed-language queries. Treat 22 languages as a target until each has completed review.
@@ -102,7 +102,7 @@ Start by making the existing application reproducible and integrating the select
 
 Keep the selected models as the baseline; modernize through measured upgrades, not model-name changes.
 
-- **Checkpoint clarity:** The SIH slide says “GPT-based” for the fine-tuned LLM; older notes say Gemma 2B. Confirm the actual checkpoint, tokenizer, license, and serving requirements from the model artifact before documenting a provider or deploying it. This is an artifact/documentation check, not a request to rebuild the model.
+- **Checkpoint clarity:** Project notes identify the fine-tuned LLM as GPT-based, while older notes say Gemma 2B. Confirm the actual checkpoint, tokenizer, license, and serving requirements from the model artifact before documenting a provider or deploying it. This is an artifact/documentation check, not a request to rebuild the model.
 - **Vision quality:** Evaluate the existing EfficientNet on a source/region-separated field-photo set with per-class recall, macro-F1, calibration, low-confidence abstention, and latency. Compare newer/mobile models only if they improve those results and fit device/cloud constraints.
 - **RAG grounding:** Preserve source, section, version, and review date in FAISS metadata. Add retrieval and citation checks; test hybrid retrieval or reranking only if they improve the reviewed evaluation set.
 - **Weather safety:** Validate the LSTM with chronological holdouts and a forecast baseline. Show region, timestamp, forecast horizon, and uncertainty. Weather risk may inform an advisory but must not be presented as a crop-disease diagnosis.
@@ -115,7 +115,7 @@ Keep the selected models as the baseline; modernize through measured upgrades, n
 
 ## Existing AI pipeline resources
 
-These Colab notebooks preserve earlier image-embedding and RAG experiments. They are not the source of truth for the SIH-selected EfficientNet checkpoint or the fine-tuned LLM version; reconcile their contents against the versioned model manifest before using them for integration. The model services still need to be connected to the application API and deployment workflow.
+These Colab notebooks preserve earlier image-embedding and RAG experiments. They are not the source of truth for the selected EfficientNet checkpoint or fine-tuned LLM; reconcile their contents against the versioned model manifest before integration. The model services still need to be connected to the application API and deployment workflow.
 
 - [Crop disease image-embedding notebook (Google Colab)](https://colab.research.google.com/drive/1Ofhbm7w5_ieNhxDtnmfKlPlw8ZnU7sO-?usp=sharing)
 - [RAG treatment-guidance notebook (Google Colab)](https://colab.research.google.com/drive/1V5oEq-q5Ypiri3eCXti7sOdwXQVyHoQB)
